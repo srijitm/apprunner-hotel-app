@@ -1,9 +1,9 @@
 {
-  "name": "apprunner-hotel-app-3",
+  "name": "apprunner-hotel-app-backend",
   "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "node --require './create-a-tracer.js' ./bin/www"
+    "start": "node --require ./bin/www"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.379.1",
@@ -30,7 +30,6 @@
     "mysql": "^2.18.1",
     "postcss": "^8.4.27",
     "postcss-nested": "^6.0.1",
-    "postcss-preset-env": "^9.1.0",
-    "pug": "^3.0.2"
+    "postcss-preset-env": "^9.1.0"
   }
 }
