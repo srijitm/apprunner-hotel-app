@@ -29,7 +29,7 @@
 #   * [RDS] Store username/password in Secrets Manager with rotation enabled
 #   * [App Runner] ECR Access Role (if using a public ECR image, you don't need this role, but creating it anyway)
 #   * [App Runner] SLR stand-in role (our public SLR policy hasn't been updated yet, so using this manually created role as a stand-in)
-#   * [App Runner] VPC Connector between App Runner service and RDS database
+#   * [App Runner] VPC Connector between App Runner service and private resouces e.g. RDS database
 
 Transform: AWS::SecretsManager-2020-07-23
 
@@ -223,15 +223,25 @@ Resources:
       SubnetId: !Ref PrivateSubnet3
       RouteTableId: !Ref PrivateRouteTable
 
-  AppRunnerServiceSecurityGroup:
+  AppRunnerFEServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow egress traffic from AppRunner Service via VPC Connector
-      GroupName: AppRunnerHotelApp-Service-SG
+      GroupDescription: Allow egress traffic from AppRunner FE Service via VPC Connector
+      GroupName: AppRunnerHotelApp-FEService-SG
       VpcId: !Ref AppRunnerHotelAppVPC
       Tags: 
         - Key: "Name"
-          Value: "AppRunnerHotelApp-Service-SG"
+          Value: "AppRunnerHotelApp-FEService-SG"
+  
+  AppRunnerBEServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow egress traffic from AppRunner BE Service
+      GroupName: AppRunnerHotelApp-BEService-SG
+      VpcId: !Ref AppRunnerHotelAppVPC
+      Tags: 
+        - Key: "Name"
+          Value: "AppRunnerHotelApp-BEService-SG"
   
   RDSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -259,26 +269,49 @@ Resources:
       IpProtocol: "tcp"
       FromPort: 3306
       ToPort: 3306
-      SourceSecurityGroupId: !Ref AppRunnerServiceSecurityGroup
+      SourceSecurityGroupId: !Ref AppRunnerBEServiceSecurityGroup
 
-  AppRunnerServiceSecurityGroupEgress:
+  AppRunnerBEServiceSecurityGroupEgress:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
-      GroupId: !Ref AppRunnerServiceSecurityGroup
+      GroupId: !Ref AppRunnerBEServiceSecurityGroup
       Description: Allow all outbound traffic
       IpProtocol: "-1"
       CidrIp: 0.0.0.0/0
+
+  AppRunnerBEServiceIngressFromAppRunnerFEService:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref AppRunnerBEServiceSecurityGroup
+      Description: Allow inbound traffic to the DB from AppRunner
+      IpProtocol: "-1"
+      FromPort: 443
+      ToPort: 443
+      SourceSecurityGroupId: !Ref AppRunnerFEServiceSecurityGroup
 
   AppRunnerServiceConnector:
     Type: AWS::AppRunner::VpcConnector
     Properties: 
       SecurityGroups: 
-        - !Ref AppRunnerServiceSecurityGroup
+        - !Ref AppRunnerFEServiceSecurityGroup
       Subnets: 
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
         - !Ref PrivateSubnet3
-      VpcConnectorName: AppRunnerHotelApp-RDS-Connector
+      VpcConnectorName: AppRunnerHotelApp-Connector
+
+  AppRunnerServiceVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      SecurityGroupIds: 
+        - !Ref AppRunnerBEServiceSecurityGroup
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.apprunner.requests"
+      SubnetIds: 
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+        - !Ref PrivateSubnet3
+      VpcEndpointType: Interface
+      VpcId: !Ref AppRunnerHotelAppVPC
 
   DBSubnetGroup:
     Type: 'AWS::RDS::DBSubnetGroup'
