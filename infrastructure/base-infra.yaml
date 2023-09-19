@@ -293,7 +293,7 @@ Resources:
     Type: AWS::AppRunner::VpcConnector
     Properties: 
       SecurityGroups: 
-        - !Ref AppRunnerFEServiceSecurityGroup
+        - !Ref AppRunnerBEServiceSecurityGroup
       Subnets: 
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
