@@ -25,8 +25,9 @@ app.use('/create', createRouter);
 app.use('/room', roomRouter);
 app.use(errorHandler);
   
-// app.listen(3001, () =>
-//     console.log('Backend app listening on port 3001!'),
-// );
+// respond with "hello world" when a GET request is made to the homepage
+app.get('/', (req, res) => {
+    res.send('hello backend')
+})
 
 module.exports = app
