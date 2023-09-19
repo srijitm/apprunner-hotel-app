@@ -25,8 +25,8 @@ app.use('/create', createRouter);
 app.use('/room', roomRouter);
 app.use(errorHandler);
   
-app.listen(3001, () =>
-    console.log('Backend app listening on port 3001!'),
-);
+// app.listen(3001, () =>
+//     console.log('Backend app listening on port 3001!'),
+// );
 
 module.exports = app
