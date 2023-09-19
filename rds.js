@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-var config = require('../frontend/config');
+var config = require('./config');
 var rdsPool = null;
 var rdsUrl = null;
 
