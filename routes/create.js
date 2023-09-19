@@ -31,21 +31,21 @@ function createTable(req, res) {
       console.log("Create table in database if not exists!");
 
       con.query('CREATE DATABASE IF NOT EXISTS hotel;', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
       });
   
       con.query('USE hotel;', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
       });
   
       con.query('CREATE TABLE IF NOT EXISTS rooms(id int NOT NULL, floor int, hasView boolean, occupied boolean, comment varchar(60), PRIMARY KEY(id));', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
