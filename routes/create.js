@@ -21,7 +21,7 @@ var router = express.Router();
 var config = require('../config');
 var rds = require('../rds');
 
-function createTable() {
+function createTable(req, res) {
   const [pool, url] = rds();
   pool.getConnection(function(error, con) {
     if (error) {
@@ -58,7 +58,7 @@ function createTable() {
 
 router.get('/', function(req, res, next) {
   try {
-    createTable();
+    createTable(req, res);
   } catch (err) {
     next(err);
   }
