@@ -25,7 +25,7 @@ app.use('/create', createRouter);
 app.use('/room', roomRouter);
 app.use(errorHandler);
   
-// respond with "hello world" when a GET request is made to the homepage
+
 app.get('/', (req, res) => {
     res.send('hello backend')
 })
