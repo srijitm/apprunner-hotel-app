@@ -27,6 +27,7 @@ app.use(errorHandler);
   
 
 app.get('/', (req, res) => {
+    console.log('[INFO] hello backend')
     res.send('hello backend')
 })
 
