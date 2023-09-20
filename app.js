@@ -1,12 +1,17 @@
-const AWS = require('aws-sdk');
-
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const config = require('./config');
 const rds = require('./rds');
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 
 // Routers
 var createRouter = require('./routes/create');

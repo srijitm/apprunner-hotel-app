@@ -21,7 +21,7 @@ var router = express.Router();
 var config = require('../config');
 var rds = require('../rds');
 
-function getRooms(req, res) {
+function getRooms(req, res, next) {
     const [pool, url] = rds();
     pool.getConnection(function(error, con){
       if (error) {
@@ -43,7 +43,8 @@ function getRooms(req, res) {
     }); 
 }
 
-function addRoom(req, res) {
+function addRoom(req, res, next) {
+    console.log(req.body)
     if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
       const roomNumber = req.body.roomNumber;
       const floorNumber = req.body.floorNumber;
@@ -82,7 +83,7 @@ function addRoom(req, res) {
 
 router.get('/', function(req, res, next) {
   try {
-    getRooms(req, res);
+    getRooms(req, res, next);
   } catch (err) {
     next(err);
   }
@@ -90,7 +91,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function (req, res, next) {
   try {
-    addRoom(req, res);
+    addRoom(req, res, next);
   } catch (err) {
     next(err);
   }
