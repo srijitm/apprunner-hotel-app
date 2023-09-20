@@ -1,9 +1,9 @@
 var config = {
     infra: {},
     app: {},
-    secret: {}
+    backend: {}
 };
 config.infra.region = process.env.AWS_REGION;
 config.app.hotel_name = process.env.HOTEL_NAME;
-config.secret.db_secret = process.env.MYSQL_SECRET;
+config.app.backend = "https://vw7b9rm244.us-east-1.awsapprunner.com/"
 module.exports = config;

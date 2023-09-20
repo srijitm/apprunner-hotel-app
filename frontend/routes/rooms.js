@@ -19,27 +19,24 @@
 var express = require('express');
 var router = express.Router();
 var config = require('../config');
-var rds = require('../rds');
+const https = require("https")
 
 /* display room list */
 router.get('/', function(req, res, next) {
-  const [pool, url] = rds();
-  pool.getConnection(function(err, con){
-    if (err) {
-      next(err);
-    }
-    else {
-      con.query('SELECT * FROM hotel.rooms', function(error, results, fields) {
-        con.release();
-        if (err) res.send(err);
-        if (results) {
-          res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: results});
-  
-          console.log('displayed %d rooms', results.length);
-        }
-      });
-    }
-  }); 
-});
+  https.get(config.app.backend + 'rooms', (resp) => {
+    let data = '';
+
+    // A chunk of data has been recieved.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      console.log(JSON.parse(data).length);
+      res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(data)});
+    });
+  });
+}); 
 
 module.exports = router;
