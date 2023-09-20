@@ -35,7 +35,7 @@ function getRooms(req, res, next) {
           }
           if (results) {
             console.log('results: %j', results);
-            res.status(200).json({data: results})
+            res.status(200).json({rooms: results})
           }
         });
         con.release();
@@ -68,7 +68,7 @@ function addRoom(req, res, next) {
             }
             if (results) {
                 console.log('results: %j', results);
-                res.status(200).json({data: results})
+                res.status(200).json({rooms: results})
             }
             });
         }
