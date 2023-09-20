@@ -62,7 +62,6 @@ function addRoom(req, res, next) {
         }
         else {
           con.query(sql, sqlParams, function(error, results, fields) {
-            con.release();
             if (error) {
                 console.log(error);
                 res.status(500).json({ error: error });
