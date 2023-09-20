@@ -19,21 +19,44 @@
 var express = require('express');
 var router = express.Router();
 var config = require('../config');
-
+const https = require("https")
 
 /* Add a new room */
 router.post('/', function (req, res, next) {
   if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
+    console.log('New room request received. roomNumber: %s, floorNumber: %s, hasView: %s', req.body.roomNumber, req.body.floorNumber, req.body.hasView);
     
-    const roomNumber = req.body.roomNumber;
-    const floorNumber = req.body.floorNumber;
-    const hasView = req.body.hasView;
+    var postData = JSON.stringify({
+      "roomNumber": req.body.roomNumber,
+      "floorNumber": req.body.floorNumber,
+      "hasView": req.body.hasView
+    });
 
-    console.log('New room request received. roomNumber: %s, floorNumber: %s, hasView: %s', roomNumber, floorNumber, hasView);
+    var options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': postData.length
+      }
+    };
+    var url = config.app.backend + 'room';
+    var req = https.request(url, options, (res) => {
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
     
-          if (err) res.send(err);
-          if (result) res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
-          if (fields) console.log(fields);
+      res.on('data', (d) => {
+        process.stdout.write(d);
+      });
+    });
+    
+    req.on('error', (e) => {
+      console.error(e);
+      throw new Error('Error adding new room: ' + e.message);
+    });
+    
+    req.write(postData);
+    req.end();
+    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: req.body.roomNumber } });
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }

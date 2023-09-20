@@ -21,8 +21,6 @@ var router = express.Router();
 var config = require('../config');
 
 router.get('/', function(req, res, next) {
-
-
   res.render('create', { menuTitle: config.app.hotel_name, url: rdsUrl });
 });
 

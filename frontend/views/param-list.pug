@@ -47,17 +47,3 @@ block content
           td= value
           td= key
 
-  p
-    h2(style='text-align: center;') Secrets
-
-  table.table.table-striped.table-hover(style='margin-left: auto; margin-right: auto; width: 60%;')
-    thead.table-primary
-      tr
-        th(scope='col') Key
-        th(scope='col') Value
-    tbody(style='background-color: white')
-      each key, value in secretParams
-        tr
-          td= value
-          td= key
-
