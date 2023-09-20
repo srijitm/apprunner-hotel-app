@@ -21,7 +21,20 @@ var router = express.Router();
 var config = require('../config');
 
 router.get('/', function(req, res, next) {
-  res.render('create', { menuTitle: config.app.hotel_name, url: rdsUrl });
-});
+  var url = config.app.backend + 'create';
+  https.get(url, (resp) => {
+    let body = '';
+    // A chunk of data has been recieved.
+    resp.on('data', (chunk) => {
+      body += chunk;
+    });
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      res.render('create', { menuTitle: config.app.hotel_name, url: url });
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+}); 
 
 module.exports = router;
