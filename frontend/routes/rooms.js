@@ -23,19 +23,20 @@ const https = require("https")
 
 /* display room list */
 router.get('/', function(req, res, next) {
-  https.get(config.app.backend + 'rooms', (resp) => {
-    let data = '';
-
+  var url = config.app.backend + 'room'
+  https.get(url, (resp) => {
+    let body = '';
     // A chunk of data has been recieved.
     resp.on('data', (chunk) => {
-      data += chunk;
+      body += chunk;
     });
-
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      console.log(JSON.parse(data).length);
-      res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(data)});
+      console.log(JSON.parse(body).rooms);
+      res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
     });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
   });
 }); 
 
