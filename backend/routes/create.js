@@ -21,7 +21,7 @@ var router = express.Router();
 var config = require('../config');
 var rds = require('../rds');
 
-function createTable() {
+function createTable(req, res) {
   const [pool, url] = rds();
   pool.getConnection(function(error, con) {
     if (error) {
@@ -31,25 +31,25 @@ function createTable() {
       console.log("Create table in database if not exists!");
 
       con.query('CREATE DATABASE IF NOT EXISTS hotel;', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
       });
   
       con.query('USE hotel;', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
       });
   
       con.query('CREATE TABLE IF NOT EXISTS rooms(id int NOT NULL, floor int, hasView boolean, occupied boolean, comment varchar(60), PRIMARY KEY(id));', function(error, result, fields) {
-        if (err) {
+        if (error) {
             console.log(error);
             res.status(500).json({ error: error });
         }
-        res.status(200).json({status: `result`})
+        res.status(200).json({status: 'success'})
       });
       con.release();     
     }
@@ -58,7 +58,7 @@ function createTable() {
 
 router.get('/', function(req, res, next) {
   try {
-    createTable();
+    createTable(req, res);
   } catch (err) {
     next(err);
   }

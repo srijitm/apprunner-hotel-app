@@ -21,17 +21,17 @@ var router = express.Router();
 var config = require('../config');
 var rds = require('../rds');
 
-function getRooms() {
+function getRooms(req, res, next) {
     const [pool, url] = rds();
-    pool.getConnection(function(err, con){
-      if (err) {
-        next(err);
+    pool.getConnection(function(error, con){
+      if (error) {
+        next(error);
       }
       else {
         con.query('SELECT * FROM hotel.rooms', function(error, results, fields) {
-          if (err) {
+          if (error) {
             console.log(error);
-            res.status(500).json({ error: error.code });
+            res.status(500).json({ error: error });
           }
           if (results) {
             console.log('results: %j', results);
@@ -43,7 +43,8 @@ function getRooms() {
     }); 
 }
 
-function addRoom(req) {
+function addRoom(req, res, next) {
+    console.log(req.body)
     if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
       const roomNumber = req.body.roomNumber;
       const floorNumber = req.body.floorNumber;
@@ -55,16 +56,15 @@ function addRoom(req) {
       sqlParams = [roomNumber, floorNumber, hasView];
       
       const [pool, url] = rds();
-      pool.getConnection(function(err, con){
-        if (err) {
-          next(err)
+      pool.getConnection(function(error, con){
+        if (error) {
+          next(error)
         }
         else {
           con.query(sql, sqlParams, function(error, results, fields) {
-            con.release();
-            if (err) {
+            if (error) {
                 console.log(error);
-                res.status(500).json({ error: error.code });
+                res.status(500).json({ error: error });
             }
             if (results) {
                 console.log('results: %j', results);
@@ -82,7 +82,7 @@ function addRoom(req) {
 
 router.get('/', function(req, res, next) {
   try {
-    getRooms();
+    getRooms(req, res, next);
   } catch (err) {
     next(err);
   }
@@ -90,7 +90,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function (req, res, next) {
   try {
-    addRoom(req);
+    addRoom(req, res, next);
   } catch (err) {
     next(err);
   }
