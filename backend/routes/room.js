@@ -21,78 +21,78 @@ const router = express.Router();
 const rds = require('../rds');
 
 function getRooms(req, res, next) {
-    const [pool, url] = rds();
-    pool.getConnection(function(error, con){
-      if (error) {
-        next(error);
-      }
-      else {
-        con.query('SELECT * FROM hotel.rooms', function(error, results, fields) {
-          if (error) {
-            console.log(error);
-            res.status(500).json({ error: error });
-          }
-          if (results) {
-            console.log('results: %j', results);
-            res.status(200).json({data: results})
-          }
-        });
-        con.release();
-      }
-    }); 
+  const [pool, url] = rds();
+  pool.getConnection(function(error, con){
+    if (error) {
+      next(error);
+    }
+    else {
+      con.query('SELECT * FROM hotel.rooms', function(error, results, fields) {
+        if (error) {
+          console.log(error);
+          res.status(500).json({ error: error });
+        }
+        if (results) {
+          console.log('results: %j', results);
+          res.status(200).json({rooms: results})
+        }
+      });
+      con.release();
+    }
+  }); 
 }
 
 function addRoom(req, res, next) {
-    console.log(req.body)
-    if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
-      const roomNumber = req.body.roomNumber;
-      const floorNumber = req.body.floorNumber;
-      const hasView = req.body.hasView;
-  
-      console.log('New room request received. roomNumber: %s, floorNumber: %s, hasView: %s', roomNumber, floorNumber, hasView);
-      
-      var sql = "INSERT INTO hotel.rooms (id, floor, hasView) VALUES (?, ?, ?)";
-      sqlParams = [roomNumber, floorNumber, hasView];
-      
-      const [pool, url] = rds();
-      pool.getConnection(function(error, con){
-        if (error) {
-          next(error)
-        }
-        else {
-          con.query(sql, sqlParams, function(error, results, fields) {
-            if (error) {
-                console.log(error);
-                res.status(500).json({ error: error });
-            }
-            if (results) {
-                console.log('results: %j', results);
-                res.status(200).json({data: results})
-            }
-            });
-        }
-        con.release();
-      });
-    } else {
-      console.log("Missing params");
-      res.status(500).json({ error: 'Missing params'});
-    }
+  console.log(req.body)
+  if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
+    const roomNumber = req.body.roomNumber;
+    const floorNumber = req.body.floorNumber;
+    const hasView = req.body.hasView;
+
+    console.log('New room request received. roomNumber: %s, floorNumber: %s, hasView: %s', roomNumber, floorNumber, hasView);
+    
+    var sql = "INSERT INTO hotel.rooms (id, floor, hasView) VALUES (?, ?, ?)";
+    sqlParams = [roomNumber, floorNumber, hasView];
+    
+    const [pool, url] = rds();
+    pool.getConnection(function(error, con){
+      if (error) {
+        next(error)
+      }
+      else {
+        con.query(sql, sqlParams, function(error, results, fields) {
+          if (error) {
+              console.log(error);
+              res.status(500).json({ error: error });
+          }
+          if (results) {
+              console.log('results: %j', results);
+              res.status(200).json({rooms: results})
+          }
+          });
+      }
+      con.release();
+    });
+  } else {
+    console.log("Missing params");
+    res.status(500).json({ error: 'Missing params'});
+  }
 }
 
 router.get('/', function(req, res, next) {
-  try {
-    getRooms(req, res, next);
-  } catch (err) {
-    next(err);
-  }
+try {
+  getRooms(req, res, next);
+} catch (err) {
+  next(err);
+}
 });
 
 router.post('/', function (req, res, next) {
-  try {
-    addRoom(req, res, next);
-  } catch (err) {
-    next(err);
-  }
+try {
+  addRoom(req, res, next);
+} catch (err) {
+  next(err);
+}
 });
 
 module.exports = router;
