@@ -16,10 +16,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var express = require('express');
-var router = express.Router();
-var config = require('../config');
-var rds = require('../rds');
+const express = require('express');
+const router = express.Router();
+const rds = require('../rds');
 
 function getRooms(req, res, next) {
     const [pool, url] = rds();
