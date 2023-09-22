@@ -34,13 +34,16 @@ block content
         th(scope='col') Floor Number
         th(scope='col') Good View
     tbody(style='background-color: white')
-      each room, i in rooms
-        tr
-          th(scope='row')= i+1
-          td= room.id
-          td= room.floor
-          td
-            if(room.hasView == 1)
-              span.badge.rounded-pill.bg-success Yes
-            else
-              span.badge.rounded-pill.bg-danger No
+      if (typeof(rooms) !== 'undefined') && (rooms.length > 0)
+        each room, i in rooms
+          tr
+            th(scope='row')= i+1
+            td= room.id
+            td= room.floor
+            td
+              if(room.hasView == 1)
+                span.badge.rounded-pill.bg-success Yes
+              else
+                span.badge.rounded-pill.bg-danger No
+      else
+        p No rooms added!
