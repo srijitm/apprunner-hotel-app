@@ -16,9 +16,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var express = require('express');
-var router = express.Router();
-var config = require('../config');
+const express = require('express');
+const router = express.Router();
+const config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

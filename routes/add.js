@@ -16,9 +16,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var express = require('express');
-var router = express.Router();
-var config = require('../config');
+const express = require('express');
+const router = express.Router();
+const config = require('../config');
 const https = require("https")
 
 /* Add a new room */
@@ -26,10 +26,14 @@ router.post('/', function (req, res, next) {
   if (req.body.roomNumber && req.body.floorNumber && req.body.hasView) {
     console.log('New room request received. roomNumber: %s, floorNumber: %s, hasView: %s', req.body.roomNumber, req.body.floorNumber, req.body.hasView);
     
+    var roomNumber = req.body.roomNumber;
+    var floorNumber = req.body.floorNumber;
+    var hasView = req.body.hasView;
+
     var postData = JSON.stringify({
-      "roomNumber": req.body.roomNumber,
-      "floorNumber": req.body.floorNumber,
-      "hasView": req.body.hasView
+      "roomNumber": roomNumber,
+      "floorNumber": floorNumber,
+      "hasView": hasView
     });
 
     var options = {
@@ -56,7 +60,7 @@ router.post('/', function (req, res, next) {
     
     req.write(postData);
     req.end();
-    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: req.body.roomNumber } });
+    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }
