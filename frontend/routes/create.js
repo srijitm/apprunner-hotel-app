@@ -22,7 +22,7 @@ const config = require('../config');
 const https = require("https");
 
 router.get('/', function(req, res, next) {
-  var url = config.app.backend + 'create';
+  var url = config.app.backend + '/create';
   https.get(url, (resp) => {
     let body = '';
     // A chunk of data has been recieved.

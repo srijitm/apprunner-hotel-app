@@ -23,7 +23,7 @@ const https = require("https")
 
 /* display room list */
 router.get('/', function(req, res, next) {
-  var url = config.app.backend + 'room';
+  var url = config.app.backend + '/room';
   https.get(url, (resp) => {
     let body = '';
     // A chunk of data has been recieved.
