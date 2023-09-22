@@ -32,13 +32,8 @@ router.get('/', function(req, res, next) {
     });
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      if (body.length == 0) {
-        res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: []});
-      }
-      else {
-        console.log(JSON.parse(body).rooms);
-        res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
-      }
+      console.log(JSON.parse(body).rooms);
+      res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
