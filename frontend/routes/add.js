@@ -43,7 +43,7 @@ router.post('/', function (req, res, next) {
         'Content-Length': postData.length
       }
     };
-    var url = config.app.backend + '/room';
+    var url = config.app.backend + 'room';
     var req = https.request(url, options, (res) => {
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
