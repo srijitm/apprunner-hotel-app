@@ -236,12 +236,12 @@ Resources:
   AppRunnerBEServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow egress traffic from AppRunner BE Service
-      GroupName: AppRunnerHotelApp-BEService-SG
+      GroupDescription: Control traffic to BE
+      GroupName: AppRunnerHotelApp-BEService
       VpcId: !Ref AppRunnerHotelAppVPC
       Tags: 
         - Key: "Name"
-          Value: "AppRunnerHotelApp-BEService-SG"
+          Value: "AppRunnerHotelApp-BEService"
   
   RDSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -279,15 +279,15 @@ Resources:
       IpProtocol: "-1"
       CidrIp: 0.0.0.0/0
 
-  AppRunnerBEServiceIngressFromAppRunnerFEService:
+  AppRunnerBEServiceSecurityGroupIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref AppRunnerBEServiceSecurityGroup
-      Description: Allow inbound traffic to the DB from AppRunner
-      IpProtocol: "-1"
+      Description: Allow inbound traffic to the BE from FE
+      IpProtocol: "tcp"
       FromPort: 443
       ToPort: 443
-      CidrIp: 0.0.0.0/0
+      CidrIp: 172.31.0.0/16
 
   AppRunnerServiceConnector:
     Type: AWS::AppRunner::VpcConnector
@@ -465,5 +465,17 @@ Outputs:
   HotelName:
     Description: AWS Paramter Store value containing Hotel's name
     Value: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${HotelNameParam}
+  VPCID:
+    Description: The VPC ID where the back-end and RDS is provisioned.
+    Value: !Ref AppRunnerHotelAppVPC
+  AppRunnerVPCEndpoint:
+    Description: The App Runner VPC Endpoint
+    Value: !Ref  AppRunnerServiceVPCEndpoint
+  AppRunnerVPCConnector:
+    Description: The App Runner VPC Connector
+    Value: !GetAtt AppRunnerServiceConnector.VpcConnectorArn
+  AppRunnerInstanceRole:
+    Description: The App Runner IAM instance role
+    Value: !GetAtt AppRunnerInstanceRole.Arn
 
 
