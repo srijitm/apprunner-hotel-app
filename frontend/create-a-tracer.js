@@ -40,7 +40,7 @@ const tracerConfig = {
   ],
   // any resources can be declared here
   resource: Resource.default().merge(new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]: 'apprunner-hotel-demo'
+      [SemanticResourceAttributes.SERVICE_NAME]: 'apprunner-hotel-frontend'
   }))
 };
 
