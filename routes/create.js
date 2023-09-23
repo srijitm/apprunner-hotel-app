@@ -31,7 +31,14 @@ router.get('/', function(req, res, next) {
     });
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      res.render('create', { menuTitle: config.app.hotel_name, url: url });
+      console.log(JSON.parse(body));
+      if(body.includes('error')) {
+        res.render('create', { menuTitle: config.app.hotel_name, url: url, result: JSON.parse(body).error });
+      }
+      else {
+        res.render('create', { menuTitle: config.app.hotel_name, url: url, result: JSON.parse(body).status });
+      } 
+      
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
