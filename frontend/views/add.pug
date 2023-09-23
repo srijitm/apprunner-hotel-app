@@ -39,6 +39,9 @@ block content
         p
         div.actions
           button.btn.btn-primary(type='submit' style='margin-left: 15px;') Add room
-  if result
+  if result.roomId
     div.results
         p(style='margin-left: 15px; margin-top: 15px;') Room number #{result.roomId} added
+  else 
+    div.results
+      p(style='margin-left: 15px; margin-top: 15px;') Error: #{result.error} added

@@ -59,8 +59,12 @@ router.post('/', function (req, res, next) {
     req.write(postData);
     req.end();
     res.on('end', () => {
-      res.status(500).next(JSON.parse(res).error);
-      res.status(200).render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
+      if(res.statusCode == 200) {
+        res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
+      }
+      else {
+        res.render('add', { title: 'Add new room', view: 'No', result: { error: res.message } });
+      }
     });
 
   } else {
