@@ -45,22 +45,22 @@ router.post('/', function (req, res, next) {
     };
     var url = config.app.backend + 'room';
     var req = https.request(url, options, (res) => {
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
       res.on('data', (d) => {
         process.stdout.write(d);
       });
     });
     
-    res.on('error', (e) => {
+    req.on('error', (e) => {
       console.error(e);
-      next(e);
+      throw new Error('Error adding new room: ' + e.message);
     });
     
     req.write(postData);
     req.end();
-
-    res.on('end', () => {
-      res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
-    });
+    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }
