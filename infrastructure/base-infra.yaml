@@ -295,7 +295,7 @@ Resources:
       IpProtocol: "tcp"
       FromPort: 443
       ToPort: 443
-      CidrIp: 172.31.0.0/16
+      SourceSecurityGroupId: !Ref AppRunnerFEServiceSecurityGroup
 
   AppRunnerFEServiceConnector:
     Type: AWS::AppRunner::VpcConnector
