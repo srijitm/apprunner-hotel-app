@@ -50,7 +50,13 @@ router.post('/', function (req, res, next) {
         body += chunk;
       });
       resp.on('end', () => {
-        res.render('add', { title: 'Add new room', view: 'No', result: { body } });
+        if(body.length > 0) {
+          console.log(JSON.parse(body))
+          res.render('add', { title: 'Add new room', view: 'No', result: JSON.parse(body) });
+        }
+        else {
+          res.render('add', { title: 'Add new room', view: 'No', result: 'Something went wrong' });
+        }
       })
     }).on('error', (e) => {
       console.error(e);
