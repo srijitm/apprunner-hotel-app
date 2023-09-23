@@ -45,15 +45,12 @@ router.post('/', function (req, res, next) {
     };
     var url = config.app.backend + 'room';
     var req = https.request(url, options, (res) => {
-      console.log('statusCode:', res.statusCode);
-      console.log('headers:', res.headers);
-    
       res.on('data', (d) => {
         process.stdout.write(d);
       });
     });
     
-    req.on('error', (e) => {
+    res.on('error', (e) => {
       console.error(e);
       next(e);
     });
