@@ -59,13 +59,14 @@ router.post('/', function (req, res, next) {
     req.write(postData);
     req.end();
 
-    if (res.status == "500") {
-      next(JSON.parse(res));
-    }
-    else {
-      console.log('Room added successfully. roomId: %s', roomNumber);
-      res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
-    }
+    if(res.status(500))
+      next();
+
+    if(res.status(404))
+      next();
+    
+    console.log('Room added successfully. roomId: %s', roomNumber);
+    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }
