@@ -50,13 +50,13 @@ router.post('/', function (req, res, next) {
         body += chunk;
       });
       resp.on('end', () => {
-        if(body.length > 0) {
           console.log(JSON.parse(body))
-          res.render('add', { title: 'Add new room', view: 'No', result: 'Added' });
-        }
-        else {
-          res.render('add', { title: 'Add new room', view: 'No', result: 'Something went wrong' });
-        }
+          if(body.includes('error')) {
+            res.render('add', { title: 'Add new room', view: 'Yes', result: JSON.parse(body).error });
+          }
+          else {
+            res.render('add', { title: 'Add new room', view: 'Yes', result: JSON.parse(body).rooms });
+          } 
       })
     }).on('error', (e) => {
       console.error(e);
