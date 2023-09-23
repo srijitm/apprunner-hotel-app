@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "node --require ./bin/www"
+    "start": "node --require './create-a-tracer.js' ./bin/www"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.4.1",
