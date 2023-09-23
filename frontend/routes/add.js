@@ -52,10 +52,10 @@ router.post('/', function (req, res, next) {
       resp.on('end', () => {
           console.log(JSON.parse(body))
           if(body.includes('error')) {
-            res.render('add', { title: 'Add new room', view: 'Yes', result: JSON.parse(body).error });
+            res.render('add', { title: 'Add new room', menuTitle: config.app.hotel_name, view: 'Yes', result: JSON.parse(body).error });
           }
           else {
-            res.render('add', { title: 'Add new room', view: 'Yes', result: JSON.parse(body).rooms });
+            res.render('add', { title: 'Add new room', menuTitle: config.app.hotel_name, view: 'Yes', result: JSON.parse(body).rooms });
           } 
       })
     }).on('error', (e) => {
