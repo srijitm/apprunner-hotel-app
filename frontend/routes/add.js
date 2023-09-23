@@ -44,13 +44,13 @@ router.post('/', function (req, res, next) {
       }
     };
     var url = config.app.backend + 'room';
-    var req = https.request(url, options, (res) => {
+    var req = https.request(url, options, (resp) => {
       let body = '';
-      res.on('data', (chunk) => {
+      resp.on('data', (chunk) => {
         body += chunk;
       });
-      res.on('end', () => {
-      res.render('add', { title: 'Add new room', view: 'No', result: { body } });
+      resp.on('end', () => {
+        res.render('add', { title: 'Add new room', view: 'No', result: { body } });
       })
     }).on('error', (e) => {
       console.error(e);
