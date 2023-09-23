@@ -24,8 +24,8 @@ const https = require("https")
 /* display room list */
 router.get('/', function(req, res, next) {
   var url = config.app.backend + 'room';
+  var body = '';
   https.get(url, (resp) => {
-    let body = '';
     // A chunk of data has been recieved.
     resp.on('data', (chunk) => {
       body += chunk;
@@ -36,8 +36,10 @@ router.get('/', function(req, res, next) {
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
+    next(e);
   });
   res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
+
 }); 
 
 
