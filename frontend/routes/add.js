@@ -52,7 +52,7 @@ router.post('/', function (req, res, next) {
       resp.on('end', () => {
         if(body.length > 0) {
           console.log(JSON.parse(body))
-          res.render('add', { title: 'Add new room', view: 'No', result: JSON.parse(body) });
+          res.render('add', { title: 'Add new room', view: 'No', result: 'Added' });
         }
         else {
           res.render('add', { title: 'Add new room', view: 'No', result: 'Something went wrong' });
