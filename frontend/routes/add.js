@@ -59,14 +59,8 @@ router.post('/', function (req, res, next) {
     req.write(postData);
     req.end();
     res.on('end', () => {
-      if(res.statusCode == 200) {
-        res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
-      }
-      else {
-        res.render('add', { title: 'Add new room', view: 'No', result: { error: res.message } });
-      }
+      res.render('add', { title: 'Add new room', view: 'No', result: { res } })
     });
-
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }
