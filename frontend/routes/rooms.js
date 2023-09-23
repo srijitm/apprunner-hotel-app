@@ -37,7 +37,8 @@ router.get('/', function(req, res, next) {
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
   });
+  res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
 }); 
-res.render('room-list', { title: 'Room List', menuTitle: config.app.hotel_name, url: url, rooms: JSON.parse(body).rooms});
+
 
 module.exports = router;
