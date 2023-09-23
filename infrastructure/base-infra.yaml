@@ -271,6 +271,14 @@ Resources:
       ToPort: 3306
       SourceSecurityGroupId: !Ref AppRunnerBEServiceSecurityGroup
 
+  AppRunnerFEServiceSecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppRunnerFEServiceSecurityGroup
+      Description: Allow all outbound traffic
+      IpProtocol: "-1"
+      CidrIp: 0.0.0.0/0
+
   AppRunnerBEServiceSecurityGroupEgress:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -289,7 +297,18 @@ Resources:
       ToPort: 443
       CidrIp: 172.31.0.0/16
 
-  AppRunnerServiceConnector:
+  AppRunnerFEServiceConnector:
+    Type: AWS::AppRunner::VpcConnector
+    Properties: 
+      SecurityGroups: 
+        - !Ref AppRunnerFEServiceSecurityGroup
+      Subnets: 
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+        - !Ref PrivateSubnet3
+      VpcConnectorName: AppRunnerHotelApp-FE-Connector
+
+  AppRunnerBEServiceConnector:
     Type: AWS::AppRunner::VpcConnector
     Properties: 
       SecurityGroups: 
@@ -298,7 +317,7 @@ Resources:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
         - !Ref PrivateSubnet3
-      VpcConnectorName: AppRunnerHotelApp-Connector
+      VpcConnectorName: AppRunnerHotelApp-BE-Connector
 
   AppRunnerServiceVPCEndpoint:
     Type: AWS::EC2::VPCEndpoint
@@ -471,11 +490,16 @@ Outputs:
   AppRunnerVPCEndpoint:
     Description: The App Runner VPC Endpoint
     Value: !Ref  AppRunnerServiceVPCEndpoint
-  AppRunnerVPCConnector:
+  AppRunnerFEVPCConnector:
     Description: The App Runner VPC Connector
-    Value: !GetAtt AppRunnerServiceConnector.VpcConnectorArn
+    Value: !GetAtt AppRunnerFEServiceConnector.VpcConnectorArn
+  AppRunnerBEVPCConnector:
+    Description: The App Runner VPC Connector
+    Value: !GetAtt AppRunnerBEServiceConnector.VpcConnectorArn
   AppRunnerInstanceRole:
     Description: The App Runner IAM instance role
     Value: !GetAtt AppRunnerInstanceRole.Arn
+
+
 
 
