@@ -55,12 +55,15 @@ router.post('/', function (req, res, next) {
     
     req.on('error', (e) => {
       console.error(e);
-      throw new Error('Error adding new room: ' + e.message);
+      next(e);
     });
     
     req.write(postData);
     req.end();
-    res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
+
+    res.on('end', () => {
+      res.render('add', { title: 'Add new room', view: 'No', result: { roomId: roomNumber } });
+    });
   } else {
     throw new Error('Missing room id, floor or has view parameters');
   }
